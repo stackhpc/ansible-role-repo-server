@@ -44,6 +44,7 @@ The following playbook generates a guest image and uploads it to OpenStack:
 
       roles:
         - role: repo_server
+          become: true
           repo_server_name: "alaska_repo"
           repo_server_port: 4120
           repo_server_workspace: "/home/stack"
