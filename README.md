@@ -12,6 +12,12 @@ A containerised deployment of nginx is used to serve repo content.
 The repo host supplied in the inventory must be capable of supporting
 the Docker ecosystem.
 
+If it is not already present, a Yum repo called `docker-repo` is installed
+for https://yum.dockerproject.org/
+
+RPM packages for `tar`, `unzip`, `docker-engine` and `python-docker-py`
+are installed, if not already present.
+
 Role Variables
 --------------
 
