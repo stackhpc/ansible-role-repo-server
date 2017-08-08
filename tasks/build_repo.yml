@@ -1,0 +1,20 @@
+---
+- name: Ensure the http document root volume exists
+  file:
+    state: directory
+    mode: 0755
+    path: "{{ repo_server_docroot }}"
+
+- name: Ensure that tar and unzip are installed
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: [ tar, unzip ]
+
+- name: Transfer local archives into document root
+  unarchive:
+    copy: yes
+    src: "{{ item }}"
+    dest: "{{ repo_server_docroot }}/"
+    creates: "{{ item | basename | splitext | first }}"
+  with_items: "{{ repo_server_tarballs }}"
