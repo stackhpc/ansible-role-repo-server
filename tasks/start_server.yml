@@ -1,0 +1,35 @@
+---
+- name: Ensure Docker repo is active
+  yum_repository:
+    name: docker-repo
+    description: Docker CentOS-7 packages
+    baseurl: https://yum.dockerproject.org/repo/main/centos/7
+    gpgkey: https://yum.dockerproject.org/gpg
+    gpgcheck: yes
+
+- name: Ensure Docker is installed
+  package:
+    name: "{{item}}"
+    state: present
+  with_items: [ "docker-engine", "python-docker-py" ]
+
+- name: Ensure the Docker engine is started
+  service:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Copy out the Nginx configuration file
+  copy:
+    src: repo_server-nginx.conf
+    dest: "{{ repo_server_conf }}"
+
+- name: Create the Nginx Docker container
+  docker_container:
+    name: "{{ repo_server_name }}"
+    image: nginx
+    volumes:
+      - "{{ repo_server_docroot }}:/data/www:ro"
+      - "{{ repo_server_conf }}:/etc/nginx/nginx.conf:ro"
+    ports:
+     - "{{ repo_server_port }}:80"

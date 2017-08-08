@@ -1,0 +1,7 @@
+---
+repo_server_workspace: /root
+repo_server_name: repo_server
+repo_server_port: 80
+repo_server_docroot: "{{ repo_server_workspace }}/{{ repo_server_name }}-docroot"
+repo_server_conf: "{{ repo_server_workspace }}/{{ repo_server_name }}-nginx.conf"
+repo_server_tarballs: []
