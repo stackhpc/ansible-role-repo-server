@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: repo-server
   author: Stig Telfer
   description: >
     Role to deploy an intranet repo server in a Docker container
