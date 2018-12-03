@@ -39,6 +39,9 @@ same name as the basename of the tarball filename.
 * `docroot_subpath`: The subpath under the document root that the tarball should be
 extracted to.
 
+Note: In a previous release, this variable used to contain a list of paths.
+This format is deprecated and support will be removed in a future release.
+
 Dependencies
 ------------
 
@@ -57,7 +60,6 @@ The following playbook generates a guest image and uploads it to OpenStack:
           repo_server_port: 4120
           repo_server_workspace: "/home/stack"
           repo_server_tarballs:
-            - MLNX_OFED_LINUX-4.0-2.0.0.1-rhel7.3-x86_64.tgz
             - ALaSKA-Extras.tgz
             - path: MLNX_OFED_LINUX-4.0-2.0.0.1-rhel7.3-x86_64.tgz
               docroot_subpath: ofed
