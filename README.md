@@ -32,10 +32,15 @@ holds the nginx configuration and document root for the repo server.
 Individual locations for these can be set using `repo_server_conf` and
 `repo_server_docroot` respectively.
 
-`repo_server_tarballs`: A list of filenames of gzipped tarballs to
-unpack into the repo workspace.  It is implicitly assumed that each
-tarball will unpack into a subdirectory with the same name as the
-basename of the tarball filename.
+`repo_server_tarballs`: A list of dictionaries with the following keys:
+* `path`: filename of gzipped tarball to unpack into the repo workspace. It is
+implicitly assumed that each tarball will unpack into a subdirectory with the
+same name as the basename of the tarball filename.
+* `docroot_subpath`: The subpath under the document root that the tarball should be
+extracted to.
+
+Note: In a previous release, this variable used to contain a list of paths.
+This format is deprecated and support will be removed in a future release.
 
 Dependencies
 ------------
@@ -49,14 +54,15 @@ The following playbook generates a guest image and uploads it to OpenStack:
     - hosts: seed
 
       roles:
-        - role: repo_server
+        - role: stackhpc.repo-server
           become: true
           repo_server_name: "alaska_repo"
           repo_server_port: 4120
           repo_server_workspace: "/home/stack"
           repo_server_tarballs:
-            - MLNX_OFED_LINUX-4.0-2.0.0.1-rhel7.3-x86_64.tgz
             - ALaSKA-Extras.tgz
+            - path: MLNX_OFED_LINUX-4.0-2.0.0.1-rhel7.3-x86_64.tgz
+              docroot_subpath: ofed
 
 Author Information
 ------------------
