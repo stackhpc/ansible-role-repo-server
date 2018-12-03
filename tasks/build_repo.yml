@@ -11,10 +11,33 @@
     state: present
   with_items: [ tar, unzip ]
 
+- name: Set an initial value for tarballs_compat
+  set_fact:
+    repo_server_tarballs_compat: []
+
+- name: Build up list of archives to process
+  vars:
+    current: "{{ { 'path': item } if item is string else item }}"
+  set_fact:
+    repo_server_tarballs_compat: "{{ repo_server_tarballs_compat + [current] }}"  
+  with_items: "{{ repo_server_tarballs }}"
+
+- name: Ensure subpath exists
+  vars:
+    path_prefix: >-
+      {{ repo_server_docroot ~ ('/' ~ item.docroot_subpath) if item.docroot_subpath is defined else '' }}
+  file:
+    state: directory
+    path: "{{ path_prefix }}"
+  with_items: "{{ repo_server_tarballs }}"
+
 - name: Transfer local archives into document root
+  vars:
+    path_prefix: >-
+      {{ repo_server_docroot ~ ('/' ~ item.docroot_subpath) if item.docroot_subpath is defined else '' }}
   unarchive:
     copy: yes
-    src: "{{ item }}"
-    dest: "{{ repo_server_docroot }}/"
-    creates: "{{ item | basename | splitext | first }}"
-  with_items: "{{ repo_server_tarballs }}"
+    src: "{{ item.path }}"
+    dest: "{{ path_prefix }}/"
+    creates: "{{ path_prefix ~ '/' ~ item.path | basename | splitext | first }}"
+  with_items: "{{ repo_server_tarballs_compat }}"
