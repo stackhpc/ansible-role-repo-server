@@ -28,7 +28,7 @@
   docker_container:
     name: "{{ repo_server_name }}"
     image: nginx
-    restart_policy: 'unless-stopped'
+    restart_policy: 'on-failure'
     restart_retries: 3
     volumes:
       - "{{ repo_server_docroot }}:/data/www:ro"
